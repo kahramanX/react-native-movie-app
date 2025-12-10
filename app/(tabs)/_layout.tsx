@@ -52,7 +52,10 @@ export default function TabsLayout() {
           height: 52,
           borderWidth: 1,
           borderColor: "#0F0D23",
+          position: "absolute",
+          overflow: "hidden",
         },
+        animation: "shift",
       }}
     >
       <Tabs.Screen
