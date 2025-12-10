@@ -96,7 +96,7 @@ export const fetchMovies = async ({
 }): Promise<Movie[]> => {
   const language = getDeviceLanguage();
   const endpoint = query
-    ? `${TMDB_CONFIG.BASE_URL}/search/movie?query=${encodeURIComponent(
+    ? `${TMDB_CONFIG.BASE_URL}/search/multi?query=${encodeURIComponent(
         query,
       )}&language=${language}`
     : `${TMDB_CONFIG.BASE_URL}/discover/movie?sort_by=popularity.desc&language=${language}`;

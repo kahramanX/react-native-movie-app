@@ -7,6 +7,7 @@ const MovieCard = ({
   id,
   poster_path,
   title,
+  name,
   vote_average,
   release_date,
 }: Movie) => {
@@ -24,7 +25,7 @@ const MovieCard = ({
         />
 
         <Text className="text-sm font-bold text-white mt-2" numberOfLines={1}>
-          {title}
+          {title || name}
         </Text>
 
         <View className="flex-row items-center justify-start gap-x-1">

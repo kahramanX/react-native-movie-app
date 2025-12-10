@@ -1,6 +1,7 @@
 interface Movie {
   id: number;
-  title: string;
+  title?: string;
+  name?: string;
   adult: boolean;
   backdrop_path: string;
   genre_ids: number[];

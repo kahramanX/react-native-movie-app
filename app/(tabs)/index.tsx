@@ -3,7 +3,7 @@ import SearchBar from "@/components/SearchBar";
 import TrendingCard from "@/components/TrendingCard";
 import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
-import { fetchMovies, fetchTMDB } from "@/services/api";
+import { fetchTMDB } from "@/services/api";
 import useFetch from "@/services/useFetch";
 import { useRouter } from "expo-router";
 import {
@@ -21,7 +21,31 @@ export default function Index() {
     data: moviesData,
     loading: moviesLoading,
     error: moviesError,
-  } = useFetch(() => fetchMovies({ query: "" }), true);
+  } = useFetch(
+    () =>
+      fetchTMDB<Movie[]>("discover/movie", {
+        queryParams: {
+          sort_by: "popularity.desc",
+        },
+        responseKey: "results",
+      }),
+    true,
+  );
+
+  const {
+    data: tvShowsData,
+    loading: tvShowsLoading,
+    error: tvShowsError,
+  } = useFetch(
+    () =>
+      fetchTMDB<Movie[]>("discover/tv", {
+        queryParams: {
+          sort_by: "popularity.desc",
+        },
+        responseKey: "results",
+      }),
+    true,
+  );
 
   const { data: trendingMoviesData } = useFetch(
     () => fetchTMDB<Movie[]>("trending/movie/week", { responseKey: "results" }),
@@ -106,12 +130,31 @@ export default function Index() {
                 ItemSeparatorComponent={() => <View className="w-4" />}
               />
 
-              <Text className="text-lg text-white font-bold mt-5 mb-3">
+              <Text className="text-lg text-white font-bold mt-5">
                 Latest Movies
               </Text>
 
               <FlatList
                 data={moviesData as Movie[]}
+                renderItem={({ item }) => <MovieCard {...item} />}
+                keyExtractor={(item) => item.id.toString()}
+                numColumns={3}
+                columnWrapperStyle={{
+                  justifyContent: "flex-start",
+                  gap: 20,
+                  paddingRight: 5,
+                  marginBottom: 10,
+                }}
+                className="mt-2 pb-32"
+                scrollEnabled={false}
+              />
+
+              <Text className="text-lg text-white font-bold mt-5 mb-3">
+                Latest TV Shows
+              </Text>
+
+              <FlatList
+                data={tvShowsData as Movie[]}
                 renderItem={({ item }) => <MovieCard {...item} />}
                 keyExtractor={(item) => item.id.toString()}
                 numColumns={3}
