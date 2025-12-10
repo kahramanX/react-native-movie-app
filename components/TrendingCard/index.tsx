@@ -4,9 +4,15 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 
 import { images } from "@/constants/images";
 
-const TrendingCard = ({ movie: { id, title, poster_path }, index }: any) => {
+const TrendingCard = ({
+  movie: { id, title, name, poster_path },
+  index,
+}: any) => {
+  // name varsa TV show, yoksa movie
+  const mediaType = name ? "tv" : "movie";
+
   return (
-    <Link href={`/movie/${id}`} asChild>
+    <Link href={`/movie/${id}?type=${mediaType}`} asChild>
       <TouchableOpacity className="w-32 relative pl-5">
         <Image
           source={{ uri: `https://image.tmdb.org/t/p/w500${poster_path}` }}
@@ -32,7 +38,7 @@ const TrendingCard = ({ movie: { id, title, poster_path }, index }: any) => {
           className="text-sm font-bold mt-2 text-light-200"
           numberOfLines={2}
         >
-          {title}
+          {title || name}
         </Text>
       </TouchableOpacity>
     </Link>

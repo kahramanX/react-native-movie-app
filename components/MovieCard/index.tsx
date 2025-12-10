@@ -11,8 +11,12 @@ const MovieCard = ({
   vote_average,
   release_date,
 }: Movie) => {
+  // name varsa TV show, yoksa movie
+  const mediaType = name ? "tv" : "movie";
+  const displayType = name ? "TV Show" : "Movie";
+
   return (
-    <Link href={`/movie/${id}`} asChild>
+    <Link href={`/movie/${id}?type=${mediaType}`} asChild>
       <TouchableOpacity className="w-[30%]">
         <Image
           source={{
@@ -40,7 +44,7 @@ const MovieCard = ({
             {release_date?.split("-")[0]}
           </Text>
           <Text className="text-xs font-medium text-light-300 uppercase">
-            Movie
+            {displayType}
           </Text>
         </View>
       </TouchableOpacity>
