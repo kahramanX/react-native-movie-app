@@ -10,8 +10,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import ApiError from "@/components/ApiError";
 import { icons } from "@/constants/icons";
-import { fetchTMDB } from "@/services/api";
+import { API_MISSING_ERROR_MESSAGE, fetchTMDB } from "@/services/api";
 import useFetch from "@/services/useFetch";
 
 interface MovieInfoProps {
@@ -40,7 +41,11 @@ const Details = () => {
   const videosEndpoint =
     type === "tv" ? `tv/${id}/videos` : `movie/${id}/videos`;
 
-  const { data: details, loading } = useFetch(
+  const {
+    data: details,
+    loading,
+    error,
+  } = useFetch(
     () => fetchTMDB<MovieDetails>(endpoint, { responseKey: undefined }),
     true,
   );
@@ -84,6 +89,13 @@ const Details = () => {
     return (
       <SafeAreaView className="bg-primary flex-1">
         <ActivityIndicator />
+      </SafeAreaView>
+    );
+
+  if (error)
+    return (
+      <SafeAreaView className="bg-primary flex-1">
+        <ApiError message={error.message} />
       </SafeAreaView>
     );
 

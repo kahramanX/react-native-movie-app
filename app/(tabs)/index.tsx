@@ -1,3 +1,4 @@
+import ApiError from "@/components/ApiError";
 import MovieCard from "@/components/MovieCard";
 import SearchBar from "@/components/SearchBar";
 import TrendingCard from "@/components/TrendingCard";
@@ -82,9 +83,7 @@ export default function Index() {
               className="mt-10 self-center"
             />
           ) : moviesError ? (
-            <Text className="text-white text-xl mt-10">
-              Error : {JSON.stringify(moviesError, null, 2)}
-            </Text>
+            <ApiError message={moviesError.message} />
           ) : (
             <>
               <SearchBar

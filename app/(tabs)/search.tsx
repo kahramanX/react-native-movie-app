@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Image, Text, View } from "react-native";
 
-import { icons } from "@/constants/icons";
-import { images } from "@/constants/images";
-
-import { fetchMovies } from "@/services/api";
-// import { updateSearchCount } from "@/services/appwrite";
-import useFetch from "@/services/useFetch";
-
+import ApiError from "@/components/ApiError";
 import MovieDisplayCard from "@/components/MovieCard";
 import SearchBar from "@/components/SearchBar";
+import { icons } from "@/constants/icons";
+import { images } from "@/constants/images";
+import { API_MISSING_ERROR_MESSAGE, fetchMovies } from "@/services/api";
+// import { updateSearchCount } from "@/services/appwrite";
+import useFetch from "@/services/useFetch";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -86,11 +85,14 @@ const Search = () => {
               />
             )}
 
-            {error && (
-              <Text className="text-red-500 px-5 my-3">
-                Error: {error.message}
-              </Text>
-            )}
+            {error &&
+              (error.message === API_MISSING_ERROR_MESSAGE ? (
+                <ApiError message={error.message} />
+              ) : (
+                <Text className="text-red-500 px-5 my-3">
+                  Error: {error.message}
+                </Text>
+              ))}
 
             {!loading &&
               !error &&

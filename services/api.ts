@@ -1,12 +1,27 @@
 import * as Localization from "expo-localization";
 
+export const API_MISSING_ERROR_MESSAGE =
+  "API configuration is missing. Please check your .env file and ensure all required API keys are set.";
+
+const API_KEY = process.env.EXPO_PUBLIC_MOVIE_API_KEY;
+
 export const TMDB_CONFIG = {
   BASE_URL: "https://api.themoviedb.org/3",
-  API_KEY: process.env.EXPO_PUBLIC_MOVIE_API_KEY,
+  API_KEY: API_KEY,
   headers: {
     accept: "application/json",
-    Authorization: `Bearer ${process.env.EXPO_PUBLIC_MOVIE_API_KEY}`,
+    Authorization: `Bearer ${API_KEY}`,
   },
+};
+
+/**
+ * Checks if the API key is configured
+ * @throws Error if API key is missing
+ */
+const validateApiKey = (): void => {
+  if (!API_KEY || API_KEY.trim() === "") {
+    throw new Error(API_MISSING_ERROR_MESSAGE);
+  }
 };
 
 // Cihazın dil ayarını al (örn: en, tr)
@@ -33,6 +48,9 @@ export const fetchTMDB = async <T = any>(
     responseKey?: string;
   } = {},
 ): Promise<T> => {
+  // Validate API key before making any request
+  validateApiKey();
+
   const {
     queryParams = {},
     includeLanguage = true,
@@ -71,6 +89,10 @@ export const fetchTMDB = async <T = any>(
     });
 
     if (!response.ok) {
+      // 401 Unauthorized means API key is missing or invalid
+      if (response.status === 401) {
+        throw new Error(API_MISSING_ERROR_MESSAGE);
+      }
       throw new Error(
         `TMDB API Error: ${response.status} ${response.statusText}`,
       );
@@ -94,6 +116,9 @@ export const fetchMovies = async ({
 }: {
   query: string;
 }): Promise<Movie[]> => {
+  // Validate API key before making any request
+  validateApiKey();
+
   const language = getDeviceLanguage();
   const endpoint = query
     ? `${TMDB_CONFIG.BASE_URL}/search/multi?query=${encodeURIComponent(
@@ -107,6 +132,10 @@ export const fetchMovies = async ({
   });
 
   if (!response.ok) {
+    // 401 Unauthorized means API key is missing or invalid
+    if (response.status === 401) {
+      throw new Error(API_MISSING_ERROR_MESSAGE);
+    }
     throw new Error(`Failed to fetch movies: ${response.statusText}`);
   }
 
@@ -117,6 +146,9 @@ export const fetchMovies = async ({
 export const fetchMovieDetails = async (
   movieId: string,
 ): Promise<MovieDetails> => {
+  // Validate API key before making any request
+  validateApiKey();
+
   try {
     const language = getDeviceLanguage();
     const response = await fetch(
@@ -128,6 +160,10 @@ export const fetchMovieDetails = async (
     );
 
     if (!response.ok) {
+      // 401 Unauthorized means API key is missing or invalid
+      if (response.status === 401) {
+        throw new Error(API_MISSING_ERROR_MESSAGE);
+      }
       throw new Error(`Failed to fetch movie details: ${response.statusText}`);
     }
 
